@@ -67,7 +67,7 @@ else:
         nn.add(Dense(units_per_layer, activation=hidden_activation))
     nn.add(Dense(len(classes), activation='softmax'))
 
-nn.compile(loss='categorical_crossentropy', optimizer='adam')
+nn.compile(loss='sparse_categorical_crossentropy', optimizer='adam')
 
 # Training
 training_data = [line.strip().split() for line in trf]
