@@ -33,7 +33,7 @@ def make_inputs_and_targets(data, months, size, sampling):
         for n in range(i, i + 14 * 24 * 6, sampling):
             x.append(data[n])
         inputs[counter] = x
-        targets[counter] = months[(i + num_observations) // 2]
+        targets[counter] = months[i + (num_observations // 2)]
         counter += 1
         if counter == size:
             break
@@ -46,13 +46,14 @@ def build_and_train_dense(train_inputs, train_targets, val_inputs, val_targets, 
                               keras.layers.Flatten(),
                               keras.layers.Dense(64, activation="tanh"),
                               # keras.layers.Dropout(0.2, input_shape=(64,)),
-                              keras.layers.Dropout(0.2),
-                              keras.layers.Dense(12, activation="relu"),
-                              # keras.layers.Dense(16, activation="relu"),
+                              # keras.layers.Dropout(0.2),
+                              keras.layers.Dense(32, activation="tanh"),
+                              # keras.layers.Dense(32, activation="tanh"),
+                              keras.layers.Dense(12, activation="tanh"),
                               # keras.layers.LSTM(16),
                               # keras.layers.Flatten(),
-                              # keras.layers.Dropout(0.2),
-                              keras.layers.Dense(12)
+                              keras.layers.Dropout(0.2),
+                              keras.layers.Dense(12, activation="tanh")
                               ])
     model.compile(loss='sparse_categorical_crossentropy', optimizer='adam', metrics='accuracy')
     callbacks = [keras.callbacks.ModelCheckpoint(filepath=filename, monitor='val_accuracy', save_best_only=True)]
@@ -60,7 +61,7 @@ def build_and_train_dense(train_inputs, train_targets, val_inputs, val_targets, 
                                  train_targets,
                                  epochs=10,
                                  validation_data=(val_inputs, val_targets),
-                                 validation_steps=10,
+                                 # validation_steps=10,
                                  callbacks=callbacks)
     # model.save(filename)
     return training_history
